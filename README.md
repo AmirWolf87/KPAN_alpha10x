@@ -8,11 +8,14 @@ To train and evaluate the KPAN model, you have multiple choices for sample the d
 - "smart" sampling (subnetwork = dense) - contains the top 10% entities with highest degree
 - create a subnetwork yourself. 
 
-***Data can be found in Data\orgs_dataset folder***
+***Data will be uploaded separatly. both files ( Organizations and train) should be copied to Data\orgs_dataset folder***
 
 1st step:  construct the knowledge graph with data_preparation.py 
+
 2nd step: path-find, train, and evaluate using recommender.py
+
 3rd step (optional): run baseline/matrix_factorization.py for improving the MF baseline of the KPAN Model
+
 *you may also need to run some files separately for creating few needed files.
 
 ### Knowledge Graph Construction
