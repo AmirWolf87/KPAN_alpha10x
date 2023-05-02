@@ -1,6 +1,4 @@
 # KAPN_alpha10x
-# KPAN
-We implemented the KPAN model on KKBox song dataset and MovieLens-IMDb (MI) dataset, compared it to a KPRN model (https://arxiv.org/abs/1811.04540).
 
 Python version is 3.6.9, and environment requirements can be installed using `KPAN_requirements.yml`
 
@@ -13,9 +11,12 @@ To train and evaluate the KPAN model, you have multiple choices for sample the d
 
 ***Data can be found in Data\orgs_dataset folder***
 
-1st step:  construct the knowledge graph with data_preparation.py 
+1st step:  construct the knowledge graph with data_preparation.py
+
 2nd step: path-find, train, and evaluate using recommender.py
+
 3rd step (optional): run baseline/matrix_factorization.py for improving the MF baseline of the KPAN Model
+
 *you may also need to run some files separately for creating few needed files.
 
 ### Knowledge Graph Construction
