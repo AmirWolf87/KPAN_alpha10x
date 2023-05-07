@@ -60,7 +60,7 @@ class PopularityBL():
     def calculate_popularity(self, data_ix_path):
         # read the new file
         if consts.DATASET_DOMAIN == 'orgs':
-            user_limit = 10000
+            user_limit = 40000
         else:
             user_limit = 6040
         with open(os.path.join(data_ix_path,'mf',f'processed_train_w_negatives_full_{user_limit}.pkl'), 'rb') as handle:
