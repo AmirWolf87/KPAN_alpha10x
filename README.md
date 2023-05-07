@@ -17,7 +17,7 @@ To train and evaluate the KPAN model, you have multiple choices for sample the d
 
 3rd step: run baseline/train_mf.py for improving and training the MF
 
-4rth step:  path-find, train, and evaluate using recommender.py
+4th step:  path-find, train, and evaluate using recommender.py
 
 *you may also need to run some files separately for creating few needed .pkl files.
 
