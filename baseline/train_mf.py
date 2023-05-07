@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.io import mmread, mmwrite
+from sklearn.model_selection import train_test_split
 from scipy import sparse
 from baseline.bpr import *
 # import cPickle
@@ -35,7 +36,7 @@ def parse_args():
                         help="rank of the matrix decomposition",
                         type=int)
     parser.add_argument("--num_iters",
-                        default=5,
+                        default=10,
                         help="number of iterations",
                         type=int)
     parser.add_argument("--max_samples",
@@ -350,7 +351,20 @@ def main():
         print('training...')
         print('max_samples: ', max_samples)
         train_new_model = not args.load_pretrained_model
-        model.train(train_data_mat, sampler, args.num_iters, train_new_model, max_samples)
+        # data_dense = train_data_mat.toarray()
+
+        # Split the data into training and validation sets
+        train_data, val_data = train_test_split(train_data_mat, test_size=0.2, random_state=42)
+        train_matrix = sparse.csr_matrix(train_data)
+        val_matrix = sparse.csr_matrix(val_data)
+        # val_samples = []
+        # for u in range(val_matrix.shape[0]):
+        #     for i in val_matrix[u].nonzero()[1]:
+        #         val_samples.append((u, i))
+
+        # # Store the validation data as a tuple
+        # validation_data = (val_matrix, val_samples)
+        model.train(train_matrix, sampler, args.num_iters, train_new_model, max_samples, val_matrix, early_stopping_rounds =2)
         num_5epochs = int(args.num_iters/5)
         eval_data = 'kprn_test_subset_1000'
         test_data = load_test_data(args, eval_data)
