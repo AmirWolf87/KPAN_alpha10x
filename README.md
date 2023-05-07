@@ -12,11 +12,14 @@ To train and evaluate the KPAN model, you have multiple choices for sample the d
 
 1st step:  construct the knowledge graph with data_preparation.py 
 
-2nd step: path-find, train, and evaluate using recommender.py
+2nd step: run baseline/matrix_factorization.py for initial MF baseline of the KPAN Model
 
-3rd step (optional): run baseline/matrix_factorization.py for improving the MF baseline of the KPAN Model
 
-*you may also need to run some files separately for creating few needed files.
+3rd step: run baseline/train_mf.py for improving and training the MF
+
+4rth step:  path-find, train, and evaluate using recommender.py
+
+*you may also need to run some files separately for creating few needed .pkl files.
 
 ### Knowledge Graph Construction
 Run data_preparation.py to create relevant dictionaries from the datasets.
