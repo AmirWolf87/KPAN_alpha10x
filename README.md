@@ -8,7 +8,7 @@ To train and evaluate the KPAN model, you have multiple choices for sample the d
 - "smart" sampling (subnetwork = dense) - contains the top 10% entities with highest degree
 - create a subnetwork yourself. 
 
-***Data was uploaded separatly to my Googel Drive. both files ( Organizations and train) should be copied to Data\orgs_dataset folder***
+***Data was uploaded separatly to my Google Drive. both files ( Organizations and train) should be copied to Data\orgs_dataset folder***
 
 1st step:  construct the knowledge graph with data_preparation.py 
 
