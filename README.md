@@ -1,4 +1,4 @@
-# KPAN
+# KPAR
 Python version is 3.6.9, and environment requirements can be installed using `KPAN_requirements.yml`
 
 ## Usage Information
