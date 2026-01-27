@@ -1,68 +1,169 @@
-# KPAR
-Python version is 3.6.9, and environment requirements can be installed using `KPAR_requirements.yml`
+# Anonymous Path-Based Knowledge Graph Recommender
+
+Python version: **3.6.9**  
+Environment requirements can be installed using the provided environment file.
+
+---
 
 ## Usage Information
-To train and evaluate the KPAN model, you have multiple choices for sample the data:
-- all data (subnetwork = full) 
-- random sampling (subnetwork = rs) - rs contains a random 10% sample of entities
-- "smart" sampling (subnetwork = dense) - contains the top 10% entities with highest degree
-- create a subnetwork yourself. 
 
-***Data was uploaded separatly to my Google Drive. both files ( Organizations and train) should be copied to Data\orgs_dataset folder***
+This repository implements a path-based recommender system over a heterogeneous knowledge graph.
 
-1st step:  construct the knowledge graph with data_preparation.py 
+The pipeline supports multiple ways of sampling the data:
 
-2nd step: run baseline/matrix_factorization.py for initial MF baseline of the KPAN Model
+- **Full graph** (`subnetwork = full`)
+- **Random sampling** (`subnetwork = rs`)  
+  A random 10% sample of entities
+- **Dense sampling** (`subnetwork = dense`)  
+  Top 10% of entities with the highest degree
+- **Custom subnetwork**  
+  Defined by the user
+
+The raw data files must be placed in:
+
+Data/orgs_dataset/
+Required input files:
+- `organizations.csv`
+- `train.csv`
+
+---
+
+## How to Run (Recommended Order)
+
+Because several stages depend on artifacts created earlier, the following order **must be respected**.
+
+### 1. Construct the Knowledge Graph
+
+Run the preprocessing stage to construct indexed knowledge-graph structures:
+
+python data_preparation.py
+
+### 2. Convert Pickle Files (If Required)
+To ensure compatibility across Python versions, run:
+
+python convert_pickle_3to2.py
+
+### 3. Initial Recommender Run (Without MF Initialization)
+
+Run the recommender without matrix factorization initialization, popularity baseline, or validation:
+
+python recommender.py \
+  --init_mf_embeddings False \
+  --np_baseline False \
+  --validation False
 
 
-3rd step: run baseline/train_mf.py for improving and training the MF
+This step generates path-based training artifacts that are later required by the matrix factorization stage.
 
-4th step:  path-find, train, and evaluate using recommender.py
+### 4. Matrix Factorization Baseline
 
-*you may also need to run some files separately for creating few needed .pkl files.
+Run the matrix factorization pipeline:
 
-### Knowledge Graph Construction
-Run data_preparation.py to create relevant dictionaries from the datasets.
-
-Arguments:
-
-`--interactions_file` to specify path to CSV containing user-item interactions
-
-`--subnetwork` to specify data to create knowledge graph from. For our evaluation we use 'full'.
+python matrix_factorization.py
 
 
-### recommender.py arguments
+This step generates MF embeddings and produces the file:
 
-`--train` to train model, `--validation` to add validation. `--eval` to evaluate
+processed_train_w_negatives_full_{user_limit}.pkl
 
-`--find_paths` if you want to find paths before training or evaluating
+### 5. Re-run Recommender With MF Initialization and Baselines
 
-`--subnetwork` to specify subnetwork training and evaluating on.
+Re-run the recommender using the same arguments as Step 3, but now enabling MF initialization, validation, and the popularity baseline:
 
-`--model` designates the model to train or evaluate from
+python recommender.py \
+  --init_mf_embeddings True \
+  --np_baseline True \
+  --validation True
 
-`--model_name` designates the specific model to train or evaluate: KPAN or KPRN
+ ### 6. Popularity Baseline Consistency
 
-`--path_agg_methos` designates the way of path aggregation: attention (for cross attention) or weighted pooling
+Make sure the user_limit value in:
 
-`--load_checkpoint` if you want to load a model checkpoint (weights and parameters) before training
+Baseline/popularity.py
 
-`--kg_path_file` designates the file to save/load train/test paths from
+matches the user_limit used in recommender.py.
 
-`--user_limit` designates the max number of train/test users to find paths for
+## Knowledge Graph Construction
 
-`-b` designates model batch size and `-e` number of epochs to train model for
+The knowledge graph is constructed by running data_preparation.py.
 
-`--not_in_memory` if training on entire dense subnetwork, whose paths cannot fit in memory all at once
+### Main arguments:
 
-`--lr`, `--l2_reg` specify model hyperparameters (learning rate, l2 regularization)
+#### --interactions_file
+Path to the CSV file containing user–organization interactions
 
-`--nhead`,`--dropout` specify hyperparameters for transformer layer
+#### --subnetwork
+Subnetwork type to construct (full, rs, dense)
 
-`--path_nhead` specify number of heads in path aggregation
+For evaluation, the full subnetwork is used.
 
-`--entity_agg` designates the method for aggregate paths
 
-`--random_samples` designates if the paths sampling will be random 
+## recommender.py Arguments
 
-`--item-to-item` True for inference task of item-to-item similarity
+#### --train
+Train the model
+
+#### --validation
+Enable validation
+
+#### --eval
+Evaluate the model
+
+#### --find_paths
+Find paths before training or evaluation
+
+#### --subnetwork
+Subnetwork to train and evaluate on
+
+#### --model
+Model checkpoint file
+
+#### --model_name
+Model type 
+
+#### --path_agg_method
+Path aggregation method (attention or weighted_pooling)
+
+#### --load_checkpoint
+Load an existing model checkpoint
+
+#### --kg_path_file
+File used to save/load train and test paths
+
+#### --user_limit
+Maximum number of users for path finding
+
+#### -b
+Batch size
+
+#### -e
+Number of training epochs
+
+#### --not_in_memory
+Use when paths cannot fit entirely in memory
+
+#### --lr, --l2_reg
+Learning rate and regularization parameters
+
+#### --nhead, --dropout
+Transformer hyperparameters
+
+#### --path_nhead
+Number of heads in path aggregation
+
+#### --entity_agg
+Entity aggregation method
+
+#### --random_samples
+Enable random path sampling
+
+#### --item_to_item
+Enable item-to-item inference
+
+## Notes
+
+Some .pkl files are generated implicitly during execution
+
+Re-running earlier stages may overwrite serialized artifacts
+
+Fixed random seeds are used for reproducibility
