@@ -22,6 +22,7 @@ The pipeline supports multiple ways of sampling the data:
 The raw data files must be placed in:
 
 Data/orgs_dataset/
+
 Required input files:
 - `organizations.csv`
 - `train.csv`
