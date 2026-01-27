@@ -29,7 +29,7 @@ Required input files:
 
 ---
 
-## How to Run (Recommended Order)
+## How to Run
 
 Because several stages depend on artifacts created earlier, the following order **must be respected**.
 
