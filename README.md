@@ -1,4 +1,4 @@
-# Anonymous Modeling Venture Investors with Knowledge-Graph Path Attention
+# Modeling Venture Investors with Knowledge-Graph Path Attention
 
 Python version: **3.6.9**  
 Environment requirements can be installed using the provided environment file.
